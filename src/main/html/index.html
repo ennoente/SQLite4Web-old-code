@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SQLite 4 Web</title>
+
+    <link rel="stylesheet" type="text/css" href="../css/button_styles.css">
+    <link rel="stylesheet" type="text/css" href="../css/tokenbar_styles.css">
+    <link rel="stylesheet" type="text/css" href="../css/hiddeninput_styles.css">
+
+    <script src="../js/lib/jquery-3.3.1.js"></script>
+    <script src="../js/upload-file-to-server.js"></script>
+
+</head>
+<body>
+
+<input id="tokenBar" value="https://ennothoma.io">
+
+<!-- Upload file form (invisible) -->
+<input id="hiddenInput" type="file" name="uploadfile" accept="*"/>
+
+
+<button id="upload" class="button">Upload DB file</button>
+<button id="download" class="button" disabled>Download DB file</button>
+
+<!-- This script triggers the invisible file input click when the upload button is clicked -->
+<script>
+    $("#upload").click(function(){
+        $("#hiddenInput").click();
+});
+</script>
+
+
+<hr>
+
+</body>
+</html>

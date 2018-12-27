@@ -1,0 +1,15 @@
+##SQLite4Web
+
+#### Versioning
+##### Version 1.0
+- Upload an SQLite file to the server which reads the file and sends back JSON -> table
+  is built from response
+- Table shows the data (see table style guide). The individual cells can be accessed and
+  manipulated. The changes are sent to the server which changes the db file accordingly.
+- Download db file from server
+
+#### General styles
+The web app shall be responsive to the width and height of the browser.
+
+#### Button styles
+Buttons shall have a width/height ratio of 4.
