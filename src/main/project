@@ -1,11 +1,20 @@
 ##SQLite4Web
 
+#### Current stable version
+1.0
+
+#### Currently developing on version
+1.1
+
 #### Versioning
 ##### Version 1.0
 - Upload an SQLite file to the server which reads the file and sends back JSON -> table
   is built from response
 - Table shows the data (see table style guide). The individual cells can be accessed and
-  manipulated. The changes are sent to the server which changes the db file accordingly.
+  manipulated client-side, but are not sent to the server (kind of unnecessary feature, tbh).
+
+##### Version 1.1
+- The changes from manipulated cells are sent to the server which changes the db file accordingly.
 - Download db file from server
 
 #### General styles
