@@ -20,7 +20,19 @@ function uploadFile(file) {
         let jsonResponse = JSON.parse(this.responseText);
         console.log(jsonResponse);
 
-        // ...
+        // Parse response JSON
+        let metadata = jsonResponse["metadata"];
+        let data = jsonResponse["data"];
+        let dataLength = jsonResponse["data"].length;
+        let table$ = $("#table");
+
+        // Logging
+        console.log("metadata: ");
+        console.log(metadata);
+        console.log("Data length: " + dataLength);
+
+        constructTableFromResponse(table$, metadata, data, dataLength);
+        styleTable();
     };
 
     // Error callback
@@ -31,4 +43,23 @@ function uploadFile(file) {
     // Open connection and send
     request.open("POST", "http://localhost:8080/upload");
     request.send(formData);
+}
+
+function constructTableFromResponse(table$, metadata, data, dataLength) {
+    // Construct table header row
+    let headerRow$ = $('<tr/>');
+    for (let i = 0; i < metadata.length; i++) {
+        headerRow$.append($('<th/>').html(metadata[i]));
+    }
+    table$.append(headerRow$);
+
+    // Construct table data rows
+    for (let i = 0; i < dataLength; i++) {
+        let row$ = $('<tr/>');
+        let currentRow = data[i];
+        for (let j = 0; j < currentRow.length; j++) {
+            row$.append($('<td/>').html(currentRow[j]));
+        }
+        table$.append(row$);
+    }
 }
