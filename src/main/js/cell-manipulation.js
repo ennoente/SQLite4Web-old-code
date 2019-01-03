@@ -6,7 +6,7 @@ let alreadySelectedCell = null;
  *
  * TODO: DOKU SCHREIBEN
  */
-function styleTable() {
+function addCellManipulation() {
     let td$ = $("#table:has(td)");
 
     td$.mouseover(function () {
@@ -14,40 +14,34 @@ function styleTable() {
     });
 
     td$.dblclick(function (e) {
+        // Remove the current input field, if existing
         let currentInput = $("#input");
         currentInput.closest("td").text(currentInput.val());
         currentInput.remove();
 
+        // For clarity
+        let newInput = $("#input");
+
+        // If another cell was already selected set its text to its original cell
+        // since its change was not submitted
         if (alreadySelectedCell != null)
             alreadySelectedCell.text(originalText);
 
         let clickedCell = $(e.target).closest("td");
-
         alreadySelectedCell = clickedCell;
-
         originalText = clickedCell.text();
         console.log(originalText);
 
         let input = $('<input id="input" type="text" />');
 
-        let setFocusOnInput = function(selector, callback) {
-            if (document.querySelector("#input") != null) {
-                callback();
-            } else {
-                setTimeout(function() {
-                    setFocusOnInput(selector, callback);
-                }, 8);
-            }
-        };
-
-        setFocusOnInput($("#input"), function() {
-            $("#input").val(originalText);
-            $("#input").focus();
-            $("#input").css('width', '90%');
+        setFocusOnInput(newInput, function() {
+            newInput.val(originalText);
+            newInput.focus();
         });
 
         input.bind("enterKey", function(e) {
-            $("#input").closest("td").text($("#input").val());
+            //$("#input").closest("td").text($("#input").val());
+            alreadySelectedCell.text(currentInput.val());
             alreadySelectedCell = null;
         });
 
@@ -78,4 +72,41 @@ function removeInput() {
     input$.remove();
     closestCell.text("" + originalText);
 }
+
+
+let setFocusOnInput = function(selector, callback) {
+    if (document.querySelector("#input") != null) {
+        callback();
+    } else {
+        setTimeout(function() {
+            setFocusOnInput(selector, callback);
+        }, 8);
+    }
+};
+
+
+function updateCell() {
+    let request = new XMLHttpRequest();
+
+    let url = "http://localhost:8080/update/cell";
+
+    if (primaryKey != null) {
+        url += "?primaryKey=" + primaryKey;
+    }
+
+    request.open("POST", "http://localhost:8080/upload/cell");
+
+    request.onload = function() {
+        console.log("Success! :)");
+    };
+}
+
+
+
+
+
+
+
+
+
 

@@ -1,13 +1,15 @@
 let nightMode = false;
-let body$ = $("body");
 
 $(document).ready(function() {
+    let body$ = $("body");
     $(this).keydown(function(e) {
-        if (e.keyCode === 78) {     // N
-            if (!nightMode)
+        console.log(e.keyCode);
+        if (e.keyCode === 78 && $("#input").length === 0) {     // N -- only work if no input is present
+            if (!nightMode) {
                 body$.css("background-color", "#323232");
-            else
+            } else {
                 body$.css("background-color", "#FFFFFF");
+            }
 
             nightMode = !nightMode;
         }

@@ -22,6 +22,10 @@
     background-color: #f2f2f2;
 }
 
+#table tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
 #table tr:hover {
     background-color: #ddd;
 }
@@ -55,6 +59,7 @@
     font-family: "Calibri", "Arial Black", Helvetica, sans-serif;
     font-size: 16px;
     padding: auto;
+    width: 90%;
 }
 
 

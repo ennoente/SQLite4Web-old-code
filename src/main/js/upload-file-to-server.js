@@ -1,3 +1,5 @@
+var primaryKey;
+
 // Binds the @uploadFile function to file input's onChange-Event
 $(document).ready(function() {
     $("#hiddenInput").on("change", uploadFile);
@@ -17,22 +19,25 @@ function uploadFile(file) {
     // Success callback
     request.onload = function() {
         // Store the JSON response into variable
-        let jsonResponse = JSON.parse(this.responseText);
-        console.log(jsonResponse);
+        let uploadResponse = JSON.parse(this.responseText);
+
+        primaryKey = uploadResponse["metadata"]["primaryKey"];
+
+        console.log(uploadResponse);
 
         // Parse response JSON
-        let metadata = jsonResponse["metadata"];
-        let data = jsonResponse["data"];
-        let dataLength = jsonResponse["data"].length;
+        let columnNames = uploadResponse["metadata"]["columnNames"];
+        let data = uploadResponse["data"];
+        let dataLength = uploadResponse["data"].length;
         let table$ = $("#table");
 
         // Logging
         console.log("metadata: ");
-        console.log(metadata);
+        console.log(columnNames);
         console.log("Data length: " + dataLength);
 
-        constructTableFromResponse(table$, metadata, data, dataLength);
-        styleTable();
+        constructTableFromResponse(table$, columnNames, data, dataLength);
+        addCellManipulation();
     };
 
     // Error callback
@@ -45,21 +50,3 @@ function uploadFile(file) {
     request.send(formData);
 }
 
-function constructTableFromResponse(table$, metadata, data, dataLength) {
-    // Construct table header row
-    let headerRow$ = $('<tr/>');
-    for (let i = 0; i < metadata.length; i++) {
-        headerRow$.append($('<th/>').html(metadata[i]));
-    }
-    table$.append(headerRow$);
-
-    // Construct table data rows
-    for (let i = 0; i < dataLength; i++) {
-        let row$ = $('<tr/>');
-        let currentRow = data[i];
-        for (let j = 0; j < currentRow.length; j++) {
-            row$.append($('<td/>').html(currentRow[j]));
-        }
-        table$.append(row$);
-    }
-}
