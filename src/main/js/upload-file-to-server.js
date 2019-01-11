@@ -1,4 +1,8 @@
 var primaryKey;
+var dbToken;
+var columnNames;
+var tableName;
+var columnDataTypes;
 
 // Binds the @uploadFile function to file input's onChange-Event
 $(document).ready(function() {
@@ -14,39 +18,52 @@ function uploadFile(file) {
     let formData = new FormData();
     formData.append("file", ($("#hiddenInput"))[0].files[0]);
 
-    let request = new XMLHttpRequest();
+    let uploadRequest = new XMLHttpRequest();
 
     // Success callback
-    request.onload = function() {
+    uploadRequest.onload = function() {
         // Store the JSON response into variable
         let uploadResponse = JSON.parse(this.responseText);
 
-        primaryKey = uploadResponse["metadata"]["primaryKey"];
-
-        console.log(uploadResponse);
-
-        // Parse response JSON
-        let columnNames = uploadResponse["metadata"]["columnNames"];
-        let data = uploadResponse["data"];
-        let dataLength = uploadResponse["data"].length;
-        let table$ = $("#table");
-
-        // Logging
-        console.log("metadata: ");
-        console.log(columnNames);
-        console.log("Data length: " + dataLength);
-
-        constructTableFromResponse(table$, columnNames, data, dataLength);
-        addCellManipulation();
+        window.location.replace("http://localhost:8080?dbToken=" + uploadResponse["dbToken"]);
+        apiRequest.open("GET", "http://localhost:8080/api?dbToken=" + uploadResponse["dbToken"]);
     };
 
     // Error callback
-    request.onerror = function() {
+    uploadRequest.onerror = function() {
         alert("Oh neeeej!");
     };
 
     // Open connection and send
-    request.open("POST", "http://localhost:8080/upload");
-    request.send(formData);
+    uploadRequest.open("POST", "http://localhost:8080/upload");
+    uploadRequest.send(formData);
+
+    let apiRequest = new XMLHttpRequest();
+    apiRequest.onload = function () {
+        let uploadResponse = JSON.parse(this.responseText);
+
+        // Parse response JSON
+        let data = uploadResponse["data"];
+        let dataLength = uploadResponse["data"].length;
+        let $table = $("#table");
+        columnNames = uploadResponse["metadata"]["columnNames"];
+        columnDataTypes = uploadResponse["metadata"]["columnDataTypes"];
+        primaryKey = uploadResponse["metadata"]["primaryKey"];
+        dbToken = uploadResponse["metadata"]["dbToken"];
+        tableName = uploadResponse["metadata"]["tableName"];
+
+        // Logging
+        console.log(uploadResponse);
+        console.log("metadata: ");
+        console.log(columnNames);
+        console.log("Data length: " + dataLength);
+
+        constructTableFromResponse($table, columnNames, data, dataLength);
+        addCellManipulation();
+    }
+
+    apiRequest.onerror = function() {
+        alert("Oh-Oh!");
+    }
 }
 
